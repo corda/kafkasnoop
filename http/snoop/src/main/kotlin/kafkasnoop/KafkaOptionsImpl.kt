@@ -20,7 +20,7 @@ class KafkaOptionsImpl : KafkaOptions, OptionGroup("Message Envelope Options") {
             mapOf(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG to brokerAddress,
                 ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to "false",
-                ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest",
+                ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "latest",
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to ByteArrayDeserializer::class.java.name,
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to ByteArrayDeserializer::class.java.name,
                 ConsumerConfig.MAX_POLL_RECORDS_CONFIG to "100",

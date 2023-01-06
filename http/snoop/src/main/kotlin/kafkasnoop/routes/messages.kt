@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.toList
 import java.time.Instant
 
 private const val MAX_MESSAGES_DEFAULT = 10
-private const val MIN_OFFSET_DEFAULT = 0L
 data class GetTopicMessagesParams(
     @PathParam("Name of the topic")
     val topic: String,
@@ -21,7 +20,8 @@ data class GetTopicMessagesParams(
     val partition: Int?,
     @QueryParam("Maximum number of messages to return per partition - Optional, default: $MAX_MESSAGES_DEFAULT")
     val max: Int?,
-    @QueryParam("Minimum offset to start returning messages from - Optional, default: $MIN_OFFSET_DEFAULT")
+    @QueryParam("Minimum offset to start returning messages from - Optional, default: null. " +
+            "If not specified, the offset will be calculated, so the last 'max' number of messages will be read")
     val minOffset: Long?
 )
 fun NormalOpenAPIRoute.messages(
@@ -52,7 +52,7 @@ fun NormalOpenAPIRoute.messages(
                     processor.startProcess(
                         p,
                         params.max ?: MAX_MESSAGES_DEFAULT,
-                        params.minOffset ?: MIN_OFFSET_DEFAULT
+                        params.minOffset
                     ).toList().sortedBy { it.offset }
                 }.flatten().sortedByDescending { it.timestamp }
             respond(msgs)
