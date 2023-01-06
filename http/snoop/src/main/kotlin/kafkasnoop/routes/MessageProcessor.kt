@@ -42,10 +42,9 @@ class MessageProcessor(
                 val endOffsets = kafkaConsumer.endOffsets(partitions)
 
                 // default to rewinding to 5 or max msg count
-                val offsetDiff = if (maxMsgCount == Int.MAX_VALUE) 5 else maxMsgCount
                 logger.debug("Min offset for partition $partition is ${beggingOffsets[partition]}")
                 logger.debug("Max offset for partition $partition is ${endOffsets[partition]}")
-                val startOffset = max(endOffsets[partition]?.minus(offsetDiff) ?: 0L, 0L)
+                val startOffset = max(endOffsets[partition]?.minus(maxMsgCount) ?: 0L, 0L)
                 val offset = max(startOffset, minOffset)
                 val messageCount = max(endOffsets.getOrDefault(partition, 0) - offset, maxMsgCount.toLong())
                 logger.info("Loading $messageCount from $partition starting at $offset")
@@ -54,7 +53,7 @@ class MessageProcessor(
                 var messagesLoaded = 0
                 var emptyPolls = 0
                 // TODO: tidy-up this logic.
-                while (!isClosed && (maxMsgCount == Int.MAX_VALUE || emptyPolls <= 5) && messagesLoaded < messageCount) {
+                while (!isClosed &&  emptyPolls <= 5 && messagesLoaded < messageCount) {
                     logger.debug("Polling $partition from ${kafkaConsumer.position(partition)}")
                     val msgs = kafkaConsumer
                         .poll(Duration.ofMillis(200)).records(partition)
