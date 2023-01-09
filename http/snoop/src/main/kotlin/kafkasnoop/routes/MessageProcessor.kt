@@ -9,7 +9,6 @@ import org.apache.kafka.common.TopicPartition
 import java.time.Duration
 import java.time.Instant
 import kotlin.math.max
-import kotlin.math.min
 
 /**
  * Message processor
@@ -43,9 +42,9 @@ class MessageProcessor(
                 var offset = if (minOffset != null) {
                     minOffset
                 } else {
-                    val beggingOffsets = kafkaConsumer.beginningOffsets(partitions)
+                    val beginningOffsets = kafkaConsumer.beginningOffsets(partitions)
                     val endOffsets = kafkaConsumer.endOffsets(partitions)
-                    logger.debug("Min offset for partition $partition is ${beggingOffsets[partition]}")
+                    logger.debug("Min offset for partition $partition is ${beginningOffsets[partition]}")
                     logger.debug("Max offset for partition $partition is ${endOffsets[partition]}")
                     val startOffset = max(endOffsets[partition]?.minus(maxMsgCount) ?: 0L, 0L)
                     startOffset
