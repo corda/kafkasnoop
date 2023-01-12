@@ -25,7 +25,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.12.+")
 }
 
-version = "0.0.3"
+version = "0.0.5"
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {

@@ -110,3 +110,19 @@ The above payload can be extended with additional properties (e.g. schema used),
 ### I don't use AVRO
 
 No problem. You can use to above method of providing a custom _message deserialser service_ to turn your binary message into a JSON representation.
+
+## Publish kafkasnoop-wrap docker image
+
+To create and publish docker image of `kafkasnoo-wrap`, the following two commands need to be run:
+
+```
+./gradlew copyAvroSchemaDependencies
+```
+This custom task will copy all avro schemas out of `corda-api`'s `corda-avro-schema` dependency and prepare them to copied inside the docker image.
+
+```
+./gradlew :http:snoop-wrap:jib
+```
+This command creates and pushes the image to the specified docker registry.
+The configurations are set in module snoop-wrap `build.gradle.kts` in the `jib` block.<br />
+NOTE: environment variables `CORDA_ARTIFACTORY_USERNAME` and `CORDA_ARTIFACTORY_PASSWORD` need to be set.
