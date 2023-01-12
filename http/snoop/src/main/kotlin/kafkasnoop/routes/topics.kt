@@ -93,7 +93,7 @@ fun NormalOpenAPIRoute.topicInfo(kafkaClientFactory: KafkaClientFactory) {
                 respond(
                     it.partitionsFor(params.topic).run {
                         val topicPartitions = this.map { p -> TopicPartition(params.topic, p.partition()) }
-                        val beggingOffsets = it.beginningOffsets(topicPartitions)
+                        val beginningOffsets = it.beginningOffsets(topicPartitions)
                             .map { o -> o.key.partition() to o.value }.toMap()
                         val endOffsets = it.endOffsets(topicPartitions)
                             .map { o -> o.key.partition() to o.value }.toMap()
@@ -101,7 +101,7 @@ fun NormalOpenAPIRoute.topicInfo(kafkaClientFactory: KafkaClientFactory) {
                         val partitions = this.map { p ->
                             Partition(
                                 p.partition(),
-                                beggingOffsets.getOrDefault(p.partition(), 0L),
+                                beginningOffsets.getOrDefault(p.partition(), 0L),
                                 endOffsets.getOrDefault(p.partition(), 0L),
                                 p.inSyncReplicas().count(),
                                 p.offlineReplicas().count()
