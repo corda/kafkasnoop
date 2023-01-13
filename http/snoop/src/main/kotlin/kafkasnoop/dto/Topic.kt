@@ -15,3 +15,5 @@ data class ApiUrls(val get: String, val websocket: String)
 
 @Response("Kafka Topic")
 data class Topic(val name: String, val partitions: List<Partition>, val urls: ApiUrls)
+
+data class TopicInfo(val name: String, val partitions: List<Partition>)
